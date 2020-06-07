@@ -1,13 +1,12 @@
 reset;
 reset options;
 
-model ILP.mod;
+model ILPformulation.mod;
 
-data ../Assignment/instances/i_50_1.dat;
+data ../progetto/i_10_3.dat;
+printf"data file used: i_10_3.dat\n" > results.txt;
 
-option solver '/home/davide/ampl_linux-intel64/cplex';
-
-problem ILP: y, x, Installed_VMs, Assignment, Traffic, Cpu, Memory;
+option solver 'cplex';
 
 param tic;
 param toc;
@@ -19,11 +18,14 @@ printf"-------------------\n" > results.txt;
 printf"  ILP formulation\n" > results.txt;
 printf"-------------------\n" > results.txt;
 
-solve ILP;
+solve VM_Instal;
 
 let toc := _ampl_user_time + _total_solve_user_time;
 let ILP_time := toc - tic;
 
-printf "\n solution: %g", Installed_VMs > results.txt;
+printf "\n SOLUTION: %g\n \n", VM_Instal > results.txt;
+display x > results.txt;
+
 printf "\n time: %g\n", ILP_time > results.txt;
+
 printf "\n\n" > results.txt;
