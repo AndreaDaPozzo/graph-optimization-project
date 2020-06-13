@@ -33,6 +33,21 @@ param max_iter default 1000;
 param max_iter_without_improvement default 200;
 
 #---------------------------------
+#  Starting LowerBound Computation
+#---------------------------------
+
+param Total_Traffic= sum{i in 1..N} w[i];
+param Total_CPU= sum{i in 1..N} cpu[i];
+param Total_Memory= sum{i in 1..N} m[i];
+
+param LB_Traffic = Total_Traffic/B_c;
+param LB_CPU = Total_CPU/B_CPU;
+param LB_Memory = Total_Memory/B_m;
+
+param FirstLB := max (LB_Traffic,LB_CPU,LB_Memory);
+
+
+#---------------------------------
 # Integer Linear Programming model
 #---------------------------------
 
