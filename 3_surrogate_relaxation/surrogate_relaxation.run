@@ -1,11 +1,11 @@
 reset;
 reset options;
 
-model surrogate_relaxation.mod;
+model Surrogate_Relaxation.mod;
 
-data ../Assignment/instances/i_10_3.dat;
+data i_40_1.dat;
 
-option solver '/home/davide/ampl_linux-intel64/cplex';
+option solver 'cplex';
 
 problem SurrogateRelaxation: x, y, Installed_VMs, Assignment, SurrogateCapacity;
 
@@ -21,7 +21,7 @@ printf"          Surrogate Relaxation          \n" > results.txt;
 printf"----------------------------------------\n" > results.txt;
 # Initialize the surrogate relaxation
 
-param LB_SR default 0;
+param LB_SR default FirstLB;
 display LB_SR > results.txt;
 
 param UB_SR default M;
@@ -78,6 +78,10 @@ repeat
 
 	printf"\n Current best lower bound %g", LB_SR > results.txt;
 	 
+	if(LB_SR == UB_SR) then {
+       printf"\n Optimal found! \n" > results.txt;
+       break;
+    }
 	# Update multipliers
 	for {j in 1..M}
 	{
@@ -93,12 +97,6 @@ repeat
 	printf"\n Updated step %g \n", t > results.txt;
 
     let iter := iter + 1;
-
-	if(LB_SR == UB_SR) then {
-        printf"\n Optimal found! \n" > results.txt;
-        break;
-    }
-
 
     if (iter_from_last_improvement > max_iter_without_improvement) then {
         printf"\n %g iterations passed without improvements. Quitting. \n", iter_from_last_improvement > results.txt;
